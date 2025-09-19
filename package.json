@@ -1,5 +1,5 @@
 {
-  "name": "@opencode-ai/subagent-logging-plugin",
+  "name": "@thatguyinabeanie/subagent-logging-plugin",
   "version": "1.0.0",
   "description": "OpenCode plugin for subagent logging and monitoring",
   "type": "module",
@@ -14,11 +14,20 @@
       "types": "./src/*"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thatguyinabeanie/opencode-subagent-logging.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "dev": "bun run --watch index.ts",
     "build": "bun build index.ts --outdir=dist --target=node",
     "type-check": "bun tsc --noEmit",
-    "lint": "bun run eslint src/**/*.ts subagent-logging.ts"
+    "lint": "bun run eslint src/**/*.ts index.ts",
+    "test": "echo 'No tests yet' && exit 0",
+    "prepare": "bun run build"
   },
   "dependencies": {
     "@opencode-ai/plugin": "^0.9.7",
@@ -27,7 +36,9 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
-    "bun-types": "^1.2.22"
+    "bun-types": "^1.2.22",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0"
   },
   "peerDependencies": {
     "bun": ">=1.0.0"
