@@ -33,19 +33,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install mise
-        uses: jdx/mise-action@v2
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          install: true
-          cache: false
+          bun-version: latest
 
       - name: Install dependencies
-        run: mise exec -- bun install
+        run: bun install
 
       - name: Build
-        run: mise exec -- bun run build
+        run: bun run build
 
       - name: Publish to GitHub Packages
-        run: mise exec -- bun publish
+        run: bun publish
         env:
           BUN_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

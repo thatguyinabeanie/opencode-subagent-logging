@@ -13,23 +13,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install mise
-        uses: jdx/mise-action@v2
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          install: true
-          cache: false
+          bun-version: latest
 
       - name: Install dependencies
-        run: mise exec -- bun install
+        run: bun install
 
       - name: Type check
-        run: mise exec -- bun run type-check
+        run: bun run type-check
 
       - name: Lint
-        run: mise exec -- bun run lint
-
-      - name: Build
-        run: mise exec -- bun run build
+        run: bun run lint
 
       - name: Test
-        run: mise exec -- bun run test
+        run: bun test
+
+      - name: Build
+        run: bun run build
