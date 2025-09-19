@@ -1,6 +1,6 @@
 {
   "name": "@thatguyinabeanie/subagent-logging-plugin",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "OpenCode plugin for subagent logging and monitoring",
   "type": "module",
   "main": "index.ts",

@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
 
 jobs:
   ci:
@@ -30,28 +30,3 @@ jobs:
 
       - name: Test
         run: bun run test
-
-  publish:
-    needs: ci
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install mise
-        uses: jdx/mise-action@v2
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build
-        run: bun run build
-
-      - name: Publish to GitHub Packages
-        run: bun publish
-        env:
-          BUN_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
