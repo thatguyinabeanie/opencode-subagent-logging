@@ -4,3 +4,4 @@ node_modules
 .opencode/subagent-logs/
 .opencode/test-logs/
 !AGENTS.md
+!mise.toml

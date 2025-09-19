@@ -2,24 +2,55 @@ import { join } from 'path'
 import { formatEvent } from '@/src/formatter.ts'
 import type { Event } from '@opencode-ai/sdk'
 
+// Store pending writes to prevent race conditions
+const pendingWrites = new Map<string, Promise<void>>()
+
 export async function logEvent(event: Event, rootSessionId: string): Promise<void> {
   if (!rootSessionId) return
 
-  const logDir = join(Bun.env.OPENCODE_DATA_DIR || '.opencode', 'subagent-logs')
-  const logFile = join(logDir, `session-${rootSessionId}.log`)
+  try {
+    const logDir = join(Bun.env.OPENCODE_DATA_DIR || '.opencode', 'subagent-logs')
+    const logFile = join(logDir, `session-${rootSessionId}.log`)
 
-  // Ensure directory exists
-  await Bun.$`mkdir -p ${logDir}`.quiet()
+    // Ensure directory exists
+    try {
+      await Bun.$`mkdir -p ${logDir}`
+    } catch {
+      // Directory creation failed, but continue
+    }
 
-  const formatted = formatEvent(event)
-  const timestamp = new Date().toISOString()
+    const formatted = formatEvent(event)
+    const timestamp = new Date().toISOString()
 
-  // Use formatted message if available, otherwise fall back to JSON
-  const message = formatted.message || JSON.stringify(event)
-  const logEntry = `[${timestamp}] ${message}\n`
+    // Use formatted message if available, otherwise fall back to JSON
+    const message = formatted.message || JSON.stringify(event)
+    const logEntry = `[${timestamp}] ${message}\n`
 
-  // Read existing content and append
-  const file = Bun.file(logFile)
-  const existingContent = (await file.exists()) ? await file.text() : ''
-  await Bun.write(file, existingContent + logEntry)
+    // Serialize writes per file to prevent race conditions
+    const writeOperation = async (): Promise<void> => {
+      const file = Bun.file(logFile)
+      const existingContent = (await file.exists()) ? await file.text() : ''
+      await Bun.write(file, existingContent + logEntry)
+    }
+
+    // Wait for any pending write on this file, then execute our write
+    const existingWrite = pendingWrites.get(logFile)
+    const currentWrite = existingWrite
+      ? existingWrite.then(writeOperation).catch(() => {}) // Ignore errors from previous writes
+      : writeOperation()
+
+    pendingWrites.set(logFile, currentWrite)
+
+    // Clean up completed write from map
+    currentWrite.finally(() => {
+      if (pendingWrites.get(logFile) === currentWrite) {
+        pendingWrites.delete(logFile)
+      }
+    })
+
+    await currentWrite
+  } catch {
+    // Silently fail to avoid disrupting plugin operation
+    // Error logging is handled elsewhere in the plugin
+  }
 }

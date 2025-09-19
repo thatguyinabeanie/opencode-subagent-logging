@@ -19,9 +19,9 @@ const subagentStats = new Map<
   string,
   { startTime: number; toolCount: number; errorCount: number }
 >()
-const sessionTokens = new Map<string, { input: number; output: number }>()
-const loggedSessionIds = new Set<string>()
-const loggedSubagentStarts = new Set<string>()
+export const sessionTokens = new Map<string, { input: number; output: number }>()
+export const loggedSessionIds = new Set<string>()
+export const loggedSubagentStarts = new Set<string>()
 
 function getIndentation(sessionId: string): string {
   const depth = sessionHierarchy.get(sessionId)?.depth || 0

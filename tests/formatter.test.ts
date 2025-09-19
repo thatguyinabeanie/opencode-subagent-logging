@@ -1,5 +1,12 @@
 import { test, expect, describe, beforeEach } from 'bun:test'
-import { formatEvent, findRootSessionId, sessionHierarchy } from '@/src/formatter.ts'
+import {
+  formatEvent,
+  findRootSessionId,
+  sessionHierarchy,
+  loggedSessionIds,
+  loggedSubagentStarts,
+  sessionTokens,
+} from '@/src/formatter.ts'
 import type {
   Event,
   EventSessionUpdated,
@@ -22,6 +29,9 @@ describe('Formatter', () => {
   beforeEach(() => {
     // Clear state before each test
     sessionHierarchy.clear()
+    loggedSessionIds.clear()
+    loggedSubagentStarts.clear()
+    sessionTokens.clear()
   })
 
   describe('findRootSessionId', () => {
