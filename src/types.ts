@@ -1,5 +1,5 @@
 export interface SimpleEvent {
-  type: string;
-  properties?: any;
-  timestamp?: number;
+  type: string
+  properties?: any
+  timestamp?: number
 }

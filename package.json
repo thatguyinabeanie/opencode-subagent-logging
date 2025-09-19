@@ -25,7 +25,9 @@
     "dev": "bun run --watch index.ts",
     "build": "bun build index.ts --outdir=dist --target=node",
     "type-check": "bun tsc --noEmit",
-    "lint": "bun run eslint src/**/*.ts index.ts",
+    "lint": "eslint src/**/*.ts index.ts",
+    "format": "prettier --write src/**/*.ts index.ts",
+    "format:check": "prettier --check src/**/*.ts index.ts",
     "test": "echo 'No tests yet' && exit 0",
     "prepare": "bun run build"
   },
@@ -34,11 +36,15 @@
     "@opencode-ai/sdk": "^0.9.7"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "bun-types": "^1.2.22",
     "@commitlint/cli": "^19.0.0",
-    "@commitlint/config-conventional": "^19.0.0"
+    "@commitlint/config-conventional": "^19.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "bun-types": "^1.2.22",
+    "eslint": "^9.35.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "bun": ">=1.0.0"

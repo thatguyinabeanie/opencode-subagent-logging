@@ -1,3 +1,4 @@
 dist
 node_modules
-
+.opencode/logs/*
+!AGENTS.md
