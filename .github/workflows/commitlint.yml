@@ -19,6 +19,11 @@ jobs:
           install: true
           cache: false
 
+      - name: Install bun directly
+        run: |
+          mise trust
+          mise install bun@latest
+
       - name: Install dependencies
         run: mise exec -- bun install
 
