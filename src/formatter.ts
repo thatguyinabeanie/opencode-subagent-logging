@@ -1,4 +1,5 @@
-// ANSI Color Codes
+import type { Event, ToolState } from '@opencode-ai/sdk'
+import type { FormattedEvent } from '@/src/types.ts'
 const colors = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
@@ -38,7 +39,7 @@ export function findRootSessionId(sessionId: string): string {
   }
 }
 
-function isFileContentTool(toolName: string, input: any): boolean {
+function isFileContentTool(toolName: string, input: Record<string, unknown>): boolean {
   // Tools that typically output file contents that should be redacted
   const fileContentTools = ['read', 'bash']
 
@@ -72,7 +73,7 @@ function isFileContentTool(toolName: string, input: any): boolean {
 
   // For bash tool, check if it's running file content commands on data files
   if (toolName === 'bash' && input?.command) {
-    const command = input.command.toLowerCase().trim()
+    const command = String(input.command).toLowerCase().trim()
     const fileContentCommands = ['cat ', 'head ', 'tail ', 'less ', 'more ', 'bat ']
 
     if (fileContentCommands.some(cmd => command.startsWith(cmd))) {
@@ -84,14 +85,14 @@ function isFileContentTool(toolName: string, input: any): boolean {
 
   // For read tool, check if it's reading a data file
   if (toolName === 'read' && input?.filePath) {
-    const filePath = input.filePath.toLowerCase()
+    const filePath = String(input.filePath).toLowerCase()
     return dataFileExtensions.some(ext => filePath.endsWith(ext))
   }
 
   return false
 }
 
-function shouldTruncateOutput(toolName: string, output: string): boolean {
+function shouldTruncateOutput(_toolName: string, output: string): boolean {
   // Always truncate very long outputs (over 1000 characters)
   if (output.length > 1000) return true
 
@@ -119,30 +120,42 @@ function createTruncatedMessage(toolName: string, output: string): string {
   return `${colors.green}✅ Tool completed: ${toolName}${colors.reset}\n${colors.yellow}   Preview: ${truncatedPreview}${colors.reset}\n${colors.yellow}   [Output truncated: ${lineCount} lines, ${charCount} characters]${colors.reset}`
 }
 
-export function formatEvent(event: any): {
-  message: string | null
-  level: 'INFO' | 'DEBUG'
-  sessionId: string | null
-} {
+export function formatEvent(event: Event): FormattedEvent {
   const type = event.type || 'unknown'
   const props = event.properties || {}
 
+  // Helper function to safely access nested properties
+  const safeGet = (obj: unknown, path: string): unknown => {
+    const keys = path.split('.')
+    let current = obj
+    for (const key of keys) {
+      if (current && typeof current === 'object' && key in current) {
+        current = (current as Record<string, unknown>)[key]
+      } else {
+        return undefined
+      }
+    }
+    return current
+  }
+
   // Session Lifecycle
   if (type === 'session.updated') {
-    const session = props.info
-    const sessionId = session?.id?.slice(-8) || 'unknown'
+    const session = safeGet(props, 'info')
+    const sessionId = String(safeGet(session, 'id') || 'unknown').slice(-8)
 
-    const parentId = session?.parentID?.slice(-8) || null
-    const depth = parentId ? (sessionHierarchy.get(parentId)?.depth || 0) + 1 : 0
+    const parentId = safeGet(session, 'parentID')
+    const parentIdStr = parentId ? String(parentId).slice(-8) : null
+    const depth = parentIdStr ? (sessionHierarchy.get(parentIdStr)?.depth || 0) + 1 : 0
 
     if (!sessionHierarchy.has(sessionId)) {
-      sessionHierarchy.set(sessionId, { parentId, depth })
+      sessionHierarchy.set(sessionId, { parentId: parentIdStr, depth })
     }
 
     if (!loggedSessionIds.has(sessionId)) {
       loggedSessionIds.add(sessionId)
-      if (!parentId) {
-        const message = `${colors.magenta}${getIndentation(sessionId)}🚀 [${sessionId}] Starting session: "${session.title}"${colors.reset}`
+      if (!parentIdStr) {
+        const title = String(safeGet(session, 'title') || 'Untitled Session')
+        const message = `${colors.magenta}${getIndentation(sessionId)}🚀 [${sessionId}] Starting session: "${title}"${colors.reset}`
         return { message, level: 'INFO', sessionId }
       }
     }
@@ -150,7 +163,7 @@ export function formatEvent(event: any): {
   }
 
   if (type === 'session.idle') {
-    const sessionId = props.sessionID?.slice(-8) || 'unknown'
+    const sessionId = String(safeGet(props, 'sessionID') || 'unknown').slice(-8)
     const indent = getIndentation(sessionId)
     const tokens = sessionTokens.get(findRootSessionId(sessionId))
     const tokenSummary = tokens
@@ -166,26 +179,35 @@ export function formatEvent(event: any): {
   }
 
   if (type === 'session.error') {
-    const sessionId = props.sessionID?.slice(-8) || 'unknown'
+    const sessionId = String(safeGet(props, 'sessionID') || 'unknown').slice(-8)
     const indent = getIndentation(sessionId)
-    const error = props.error?.message || props.error || 'Unknown session error'
+    const errorObj = safeGet(props, 'error')
+    const error =
+      typeof errorObj === 'object'
+        ? String(safeGet(errorObj, 'message') || 'Unknown session error')
+        : String(errorObj || 'Unknown session error')
     const message = `${colors.red}${indent}❌ [${sessionId}] Session error: ${error}${colors.reset}`
     return { message, level: 'INFO', sessionId }
   }
 
   // Agent Thinking & Token Collection
   if (type === 'message.updated') {
-    const sessionId = props.info.sessionID?.slice(-8) || 'unknown'
+    const info = safeGet(props, 'info')
+    const sessionId = String(safeGet(info, 'sessionID') || 'unknown').slice(-8)
     const rootSessionId = findRootSessionId(sessionId)
 
-    if (props.info?.role === 'assistant' && props.info?.time?.completed && props.info?.tokens) {
+    const role = safeGet(info, 'role')
+    const time = safeGet(info, 'time')
+    const tokens = safeGet(info, 'tokens')
+
+    if (role === 'assistant' && safeGet(time, 'completed') && tokens) {
       const currentTokens = sessionTokens.get(rootSessionId) || { input: 0, output: 0 }
-      currentTokens.input += props.info.tokens.input || 0
-      currentTokens.output += props.info.tokens.output || 0
+      currentTokens.input += Number(safeGet(tokens, 'input') || 0)
+      currentTokens.output += Number(safeGet(tokens, 'output') || 0)
       sessionTokens.set(rootSessionId, currentTokens)
     }
 
-    if (props.info?.role === 'assistant' && !props.info?.time?.completed) {
+    if (role === 'assistant' && !safeGet(time, 'completed')) {
       const indent = getIndentation(sessionId)
       const message = `${colors.cyan}${indent} |  💭 Agent is thinking...${colors.reset}`
       return { message, level: 'DEBUG', sessionId }
@@ -194,21 +216,21 @@ export function formatEvent(event: any): {
 
   // Tool Execution
   if (type === 'message.part.updated') {
-    const part = props.part
-    if (part?.type !== 'tool') return { message: null, level: 'DEBUG', sessionId: null }
+    const part = safeGet(props, 'part')
+    if (safeGet(part, 'type') !== 'tool') return { message: null, level: 'DEBUG', sessionId: null }
 
-    const sessionId = part.sessionID?.slice(-8) || 'unknown'
-    const toolName = part.tool || 'unknown'
-    const state = part.state
+    const sessionId = String(safeGet(part, 'sessionID') || 'unknown').slice(-8)
+    const toolName = String(safeGet(part, 'tool') || 'unknown')
+    const state = safeGet(part, 'state') as ToolState
     const indent = getIndentation(sessionId)
 
-    switch (state.status) {
+    switch (state?.status) {
       case 'running': {
         if (subagentStats.has(sessionId)) subagentStats.get(sessionId)!.toolCount++
 
         if (toolName === 'task') {
-          const agentType = state.input?.subagent_type || 'unknown'
-          const subagentSessionId = part.callID?.slice(-8) || 'unknown'
+          const agentType = String(safeGet(state.input, 'subagent_type') || 'unknown')
+          const subagentSessionId = String(safeGet(part, 'callID') || 'unknown').slice(-8)
 
           if (!loggedSubagentStarts.has(subagentSessionId)) {
             loggedSubagentStarts.add(subagentSessionId)
@@ -229,18 +251,14 @@ export function formatEvent(event: any): {
             return { message, level: 'INFO', sessionId: subagentSessionId }
           }
         } else {
-          const details =
-            state.input?.description ||
-            state.input?.filePath ||
-            state.input?.command ||
-            state.input?.pattern ||
-            toolName
-          const truncatedDetails =
-            details && typeof details === 'string'
-              ? details.length > 80
-                ? details.slice(0, 80) + '...'
-                : details
-              : toolName
+          const details = String(
+            safeGet(state.input, 'description') ||
+              safeGet(state.input, 'filePath') ||
+              safeGet(state.input, 'command') ||
+              safeGet(state.input, 'pattern') ||
+              toolName
+          )
+          const truncatedDetails = details.length > 80 ? details.slice(0, 80) + '...' : details
           const message = `${colors.yellow}${indent} |  🔧 Tool: ${toolName} - ${truncatedDetails}${colors.reset}`
           return { message, level: 'DEBUG', sessionId }
         }
@@ -248,9 +266,10 @@ export function formatEvent(event: any): {
       }
       case 'completed': {
         if (toolName === 'task') {
-          const subagentSessionId = part.callID?.slice(-8) || 'unknown'
+          const subagentSessionId = String(safeGet(part, 'callID') || 'unknown').slice(-8)
           const subagentInfo = sessionHierarchy.get(subagentSessionId)
-          const agentType = subagentInfo?.agentType || state.input?.subagent_type || 'unknown'
+          const agentType =
+            subagentInfo?.agentType || String(safeGet(state.input, 'subagent_type') || 'unknown')
           const stats = subagentStats.get(subagentSessionId)
           const duration = stats ? Math.round((Date.now() - stats.startTime) / 1000) : 0
 
@@ -264,10 +283,13 @@ export function formatEvent(event: any): {
 
           return { message, level: 'INFO', sessionId: subagentSessionId }
         } else {
-          const output = state.output as string
+          const output = String(state.output || '')
 
           // Check if this tool outputs data that should be redacted
-          const shouldRedactOutput = isFileContentTool(toolName, state.input)
+          const shouldRedactOutput = isFileContentTool(
+            toolName,
+            (state.input as Record<string, unknown>) || {}
+          )
 
           // Check if output should be truncated for readability
           const shouldTruncate = output && shouldTruncateOutput(toolName, output)

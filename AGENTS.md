@@ -23,31 +23,7 @@
 - **Exports**: Use named exports with default export as fallback
 - **ESLint**: Unused vars must start with `_`, no explicit return types required
 - **Bun APIs**: **ALWAYS prioritize Bun native APIs** over Node.js equivalents
-  - **File System**: `Bun.file()`, `Bun.write()` instead of `fs` module
-  - **Process/Shell**: `Bun.spawn()` instead of `child_process`
-  - **HTTP Server**: `Bun.serve()` instead of `http` module
-  - **File Patterns**: `Bun.glob()` instead of `glob` packages
-  - **Environment**: `Bun.env` instead of `process.env`
-  - **Crypto**: `Bun.hash()`, `Bun.password()` instead of `crypto` module
-  - **SQLite**: `bun:sqlite` instead of external SQLite packages
-  - **Testing**: `bun:test` instead of Jest/Mocha
-  - **Transpilation**: `Bun.transpiler` for custom transpilation
-  - **Build**: `Bun.build()` for bundling instead of webpack/rollup
-  - **WebSocket**: Built-in WebSocket support in `Bun.serve()`
-  - **Path**: `Bun.main`, `Bun.argv` instead of `process` equivalents
-  - **Shell**: `Bun.$` template literal for shell commands
-  - **Compression**: Built-in gzip/deflate in `Bun.gzipSync()`
-  - **Base64**: `Bun.stringToBase64()`, `Bun.base64ToString()`
-  - **Buffer**: `Bun.allocUnsafe()` for buffer allocation
-  - **REPL**: `bun repl` with built-in TypeScript support
-  - **Package Manager**: `bun install`, `bun add`, `bun remove`
-  - **Runtime**: `bun run` for script execution
-  - Always prefer async Bun APIs for better performance and non-blocking operations
-
-## Dependencies
-
-- Core: `@opencode-ai/plugin`, `@opencode-ai/sdk`
-- Uses OpenCode SDK's `client.app.log()` for logging to avoid TUI conflicts
+- Use OpenCode SDK's `client.app.log()` for logging to avoid TUI conflicts
 
 ## IMPORTANT
 
@@ -60,28 +36,28 @@
 - AVOID using `any` type
 - AVOID `let` statements
 - PREFER single word variable names where possible
-- **ALWAYS prioritize Bun native APIs** over Node.js equivalents:
-  - **File System**: `Bun.file()`, `Bun.write()` instead of `fs` module
-  - **Process/Shell**: `Bun.spawn()` instead of `child_process`
-  - **HTTP Server**: `Bun.serve()` instead of `http` module
-  - **File Patterns**: `Bun.glob()` instead of `glob` packages
-  - **Environment**: `Bun.env` instead of `process.env`
-  - **Crypto**: `Bun.hash()`, `Bun.password()` instead of `crypto` module
-  - **SQLite**: `bun:sqlite` instead of external SQLite packages
-  - **Testing**: `bun:test` instead of Jest/Mocha
-  - **Transpilation**: `Bun.transpiler` for custom transpilation
-  - **Build**: `Bun.build()` for bundling instead of webpack/rollup
-  - **WebSocket**: Built-in WebSocket support in `Bun.serve()`
-  - **Path**: `Bun.main`, `Bun.argv` instead of `process` equivalents
-  - **Shell**: `Bun.$` template literal for shell commands
-  - **Compression**: Built-in gzip/deflate in `Bun.gzipSync()`
-  - **Base64**: `Bun.stringToBase64()`, `Bun.base64ToString()`
-  - **Buffer**: `Bun.allocUnsafe()` for buffer allocation
-  - **REPL**: `bun repl` with built-in TypeScript support
-  - **Package Manager**: `bun install`, `bun add`, `bun remove`
-  - **Runtime**: `bun run` for script execution
-  - Always prefer async Bun APIs for better performance and non-blocking operations
+- **ALWAYS prioritize Bun native APIs** over Node.js equivalents
 
-## Debugging
+## Bun Native APIs to Prefer
 
-- To test opencode in the `packages/opencode` directory you can run `bun dev`
+- **file system**: `bun.file()`, `bun.write()` instead of `fs` module
+- **process/shell**: `bun.spawn()` instead of `child_process`
+- **http server**: `bun.serve()` instead of `http` module
+- **file patterns**: `bun.glob()` instead of `glob` packages
+- **environment**: `bun.env` instead of `process.env`
+- **crypto**: `bun.hash()`, `bun.password()` instead of `crypto` module
+- **sqlite**: `bun:sqlite` instead of external sqlite packages
+- **testing**: `bun:test` instead of jest/mocha
+- **transpilation**: `bun.transpiler` for custom transpilation
+- **build**: `bun.build()` for bundling instead of webpack/rollup
+- **websocket**: built-in websocket support in `bun.serve()`
+- **path**: `bun.main`, `bun.argv` instead of `process` equivalents
+- **shell**: `bun.$` template literal for shell commands
+- **compression**: built-in gzip/deflate in `bun.gzipsync()`
+- **base64**: `bun.stringtobase64()`, `bun.base64tostring()`
+- **buffer**: `bun.allocunsafe()` for buffer allocation
+- **repl**: `bun repl` with built-in typescript support
+- **package manager**: `bun install`, `bun add`, `bun remove`
+- **runtime**: `bun run` for script execution
+- always prefer async bun apis for better performance and non-blocking operations
+

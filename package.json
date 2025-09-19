@@ -28,7 +28,7 @@
     "lint": "eslint src/**/*.ts index.ts",
     "format": "prettier --write src/**/*.ts index.ts",
     "format:check": "prettier --check src/**/*.ts index.ts",
-    "test": "echo 'No tests yet' && exit 0",
+    "test": "bun test",
     "prepare": "bun run build"
   },
   "dependencies": {

@@ -1,4 +1,6 @@
 dist
 node_modules
 .opencode/logs/*
+.opencode/subagent-logs/
+.opencode/test-logs/
 !AGENTS.md

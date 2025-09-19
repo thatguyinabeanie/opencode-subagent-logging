@@ -1,7 +1,7 @@
 import type { Plugin } from '@opencode-ai/plugin'
 import type { Event } from '@opencode-ai/sdk'
-import { logEvent } from './logger.ts'
-import { formatEvent, findRootSessionId } from './formatter.ts'
+import { logEvent } from '@/src/logger.ts'
+import { formatEvent, findRootSessionId } from '@/src/formatter.ts'
 
 const logLevel = process.env.OPENCODE_LOG_LEVEL?.toUpperCase() || 'DEBUG'
 
