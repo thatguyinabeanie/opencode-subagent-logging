@@ -1,4 +1,5 @@
 import { join } from 'path'
+import { appendFile } from 'fs/promises'
 import { formatEvent } from '@/src/formatter.ts'
 import type { Event } from '@opencode-ai/sdk'
 
@@ -28,9 +29,7 @@ export async function logEvent(event: Event, rootSessionId: string): Promise<voi
 
     // Serialize writes per file to prevent race conditions
     const writeOperation = async (): Promise<void> => {
-      const file = Bun.file(logFile)
-      const existingContent = (await file.exists()) ? await file.text() : ''
-      await Bun.write(file, existingContent + logEntry)
+      await appendFile(logFile, logEntry)
     }
 
     // Wait for any pending write on this file, then execute our write

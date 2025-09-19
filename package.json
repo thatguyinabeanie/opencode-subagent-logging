@@ -26,6 +26,7 @@
     "build": "bun build index.ts --outdir=dist --target=node",
     "type-check": "bun tsc --noEmit",
     "lint": "eslint src/**/*.ts index.ts",
+    "lint:fix": "eslint src/**/*.ts index.ts --fix",
     "format": "prettier --write src/**/*.ts index.ts",
     "format:check": "prettier --check src/**/*.ts index.ts",
     "test": "bun test",
