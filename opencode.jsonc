@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // LSP Configuration for TypeScript development
+  "lsp": {
+    "typescript": {
+      "command": ["bun", "x", "typescript-language-server", "--stdio"],
+      "extensions": [".ts", ".tsx"],
+      "env": {},
+    },
+    "eslint": {
+      "command": ["bun", "x", "vscode-langservers-extracted", "--stdio"],
+      "extensions": [".ts", ".tsx", ".js"],
+      "env": {},
+    },
+  },
+}
