@@ -14,7 +14,7 @@ const TEST_LOGS_DIR = '.opencode/test-logs/subagent-logs'
 const TEST_SESSION_ID = 'test-session-12345678'
 
 // Test helper for edge cases with malformed events
-function testLogMalformedEvent(malformedData: any, sessionId: string) {
+function testLogMalformedEvent(malformedData: unknown, sessionId: string) {
   // Cast to Event to bypass type checking in tests
   return logEvent(malformedData as Event, sessionId)
 }
@@ -78,7 +78,7 @@ describe('Logger', () => {
       time: { created: Date.now(), updated: Date.now() },
     }
 
-    const session2: Session = {
+    const _session2: Session = {
       id: 'second-session',
       projectID: 'test-project',
       directory: '/test',

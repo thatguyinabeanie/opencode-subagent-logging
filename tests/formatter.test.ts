@@ -13,7 +13,7 @@ import type {
 } from '@opencode-ai/sdk'
 
 // Test helper for edge cases with malformed events
-function testMalformedEvent(malformedData: any) {
+function testMalformedEvent(malformedData: unknown) {
   // Cast to Event to bypass type checking in tests
   return formatEvent(malformedData as Event)
 }

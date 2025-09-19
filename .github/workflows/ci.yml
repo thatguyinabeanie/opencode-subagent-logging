@@ -17,6 +17,7 @@ jobs:
         uses: jdx/mise-action@v2
         with:
           install: true
+          cache: false
 
       - name: Install dependencies
         run: mise exec -- bun install
