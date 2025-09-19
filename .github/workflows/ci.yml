@@ -15,18 +15,20 @@ jobs:
 
       - name: Install mise
         uses: jdx/mise-action@v2
+        with:
+          install: true
 
       - name: Install dependencies
-        run: bun install
+        run: mise exec -- bun install
 
       - name: Type check
-        run: bun run type-check
+        run: mise exec -- bun run type-check
 
       - name: Lint
-        run: bun run lint
+        run: mise exec -- bun run lint
 
       - name: Build
-        run: bun run build
+        run: mise exec -- bun run build
 
       - name: Test
-        run: bun run test
+        run: mise exec -- bun run test
