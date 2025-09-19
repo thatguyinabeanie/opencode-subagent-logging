@@ -40,24 +40,23 @@
 
 ## Bun Native APIs to Prefer
 
-- **file system**: `bun.file()`, `bun.write()` instead of `fs` module
-- **process/shell**: `bun.spawn()` instead of `child_process`
-- **http server**: `bun.serve()` instead of `http` module
-- **file patterns**: `bun.glob()` instead of `glob` packages
-- **environment**: `bun.env` instead of `process.env`
-- **crypto**: `bun.hash()`, `bun.password()` instead of `crypto` module
+- **file system**: `Bun.file()`, `Bun.write()` instead of `fs` module
+- **process/shell**: `Bun.spawn()` instead of `child_process`
+- **http server**: `Bun.serve()` instead of `http` module
+- **file patterns**: `Bun.glob()` instead of `glob` packages
+- **environment**: `Bun.env` instead of `process.env`
+- **crypto**: `Bun.hash()`, `Bun.password()` instead of `crypto` module
 - **sqlite**: `bun:sqlite` instead of external sqlite packages
 - **testing**: `bun:test` instead of jest/mocha
-- **transpilation**: `bun.transpiler` for custom transpilation
-- **build**: `bun.build()` for bundling instead of webpack/rollup
-- **websocket**: built-in websocket support in `bun.serve()`
-- **path**: `bun.main`, `bun.argv` instead of `process` equivalents
-- **shell**: `bun.$` template literal for shell commands
-- **compression**: built-in gzip/deflate in `bun.gzipsync()`
-- **base64**: `bun.stringtobase64()`, `bun.base64tostring()`
-- **buffer**: `bun.allocunsafe()` for buffer allocation
+- **transpilation**: `Bun.transpiler` for custom transpilation
+- **build**: `Bun.build()` for bundling instead of webpack/rollup
+- **websocket**: built-in websocket support in `Bun.serve()`
+- **path**: `Bun.main`, `Bun.argv` instead of `process` equivalents
+- **shell**: `Bun.$` template literal for shell commands
+- **compression**: built-in gzip/deflate in `Bun.gzipSync()`
+- **base64**: `Bun.stringToBase64()`, `Bun.base64ToString()`
+- **buffer**: `Bun.allocUnsafe()` for buffer allocation
 - **repl**: `bun repl` with built-in typescript support
 - **package manager**: `bun install`, `bun add`, `bun remove`
 - **runtime**: `bun run` for script execution
-- always prefer async bun apis for better performance and non-blocking operations
-
+- always prefer async Bun apis for better performance and non-blocking operations
