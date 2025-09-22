@@ -1,5 +1,5 @@
 import { test, expect, describe, beforeEach } from 'bun:test'
-import { subagentLogging } from '@/src/subagent-logging.ts'
+import { subagentLogging } from '@/opencode-subagent-logging'
 import type { Event } from '@opencode-ai/sdk'
 import type { PluginInput } from '@opencode-ai/plugin'
 
