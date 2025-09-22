@@ -26,7 +26,7 @@ export const subagentLogging: Plugin = ({ client }) => {
           try {
             await client.app.log({
               body: {
-                service: 'subagent-logging-plugin',
+                service: 'opencode-subagent-logging',
                 level: level.toLowerCase() as 'debug' | 'info' | 'error' | 'warn',
                 message: message.replace(/\x1b\[[0-9;]*m/g, ''), // Strip ANSI colors for server logs
                 extra: {
