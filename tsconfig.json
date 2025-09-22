@@ -6,6 +6,8 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -14,9 +16,11 @@
     "types": ["bun-types", "node"],
     "baseUrl": ".",
     "paths": {
-      "@/src/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/src/*": ["./src/*"],
+      "@/tests/*": ["./tests/*"]
     }
   },
-  "include": ["src/**/*.ts", "index.ts"],
+  "include": ["src/**/*.ts", "index.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@thatguyinabeanie/subagent-logging-plugin",
-  "version": "1.0.0",
+  "name": "@thatguyinabeanie/opencode-subagent-logging",
+  "version": "0.1.0",
   "description": "OpenCode plugin for subagent logging and monitoring",
   "type": "module",
   "main": "index.ts",
@@ -25,20 +25,27 @@
     "dev": "bun run --watch index.ts",
     "build": "bun build index.ts --outdir=dist --target=node",
     "type-check": "bun tsc --noEmit",
-    "lint": "bun run eslint src/**/*.ts index.ts",
-    "test": "echo 'No tests yet' && exit 0",
+    "lint": "eslint src/**/*.ts index.ts",
+    "lint:fix": "eslint src/**/*.ts index.ts --fix",
+    "format": "prettier --write src/**/*.ts index.ts",
+    "format:check": "prettier --check src/**/*.ts index.ts",
+    "test": "bun test",
     "prepare": "bun run build"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "^0.9.7",
-    "@opencode-ai/sdk": "^0.9.7"
+    "@opencode-ai/plugin": ">0.9.0",
+    "@opencode-ai/sdk": "^0.9.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "bun-types": "^1.2.22",
     "@commitlint/cli": "^19.0.0",
-    "@commitlint/config-conventional": "^19.0.0"
+    "@commitlint/config-conventional": "^19.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "bun-types": "^1.2.22",
+    "eslint": "^9.35.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "bun": ">=1.0.0"
