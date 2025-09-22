@@ -6,7 +6,7 @@ Enhanced logging and monitoring for OpenCode subagent interactions
 
 ## Overview
 
-Monitor and log subagent activities with structured output, session tracking, and intelligent formatting. This plugin captures all subagent interactions while maintaining clean TUI output through OpenCode's native logging system.
+Monitor and log subagent activities with structured output, session tracking, and intelligent formatting. This plugin captures all subagent interactions while maintaining clean TUI output through opencode's native logging system.
 
 ---
 

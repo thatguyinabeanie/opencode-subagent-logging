@@ -8,3 +8,5 @@ You commit and push to git
 Commit messages should be brief since they are used to generate release notes.
 
 Messages should say WHY the change was made and not WHAT was changed.
+
+Commit messages must follow conventional commit format as defined in commitlint.config.js (e.g., feat:, fix:, docs:, etc.).
