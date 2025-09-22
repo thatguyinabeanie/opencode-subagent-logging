@@ -6,7 +6,7 @@ Enhanced logging and monitoring for OpenCode subagent interactions
 
 ## Overview
 
-Monitor and log subagent activities with structured output, session tracking, and intelligent formatting. This plugin captures all subagent interactions while maintaining clean TUI output through OpenCode's native logging system.
+Monitor and log subagent activities with structured output, session tracking, and intelligent formatting. This plugin captures all subagent interactions while maintaining clean TUI output through opencode's native logging system.
 
 ---
 
@@ -26,14 +26,14 @@ Monitor and log subagent activities with structured output, session tracking, an
 Install the plugin as a development dependency:
 
 ```bash
-bun add -D @thatguyinabeanie/subagent-logging-plugin
+bun add -D github:@thatguyinabeanie/opencode-subagent-logging
 ```
 
 Register the plugin in your OpenCode configuration:
 
 ```jsonc
 {
-  "plugins": ["@thatguyinabeanie/subagent-logging-plugin"],
+  "plugins": ["github:@thatguyinabeanie/opencode-subagent-logging"],
 }
 ```
 
@@ -121,12 +121,6 @@ bun run dev
 ---
 
 ## API reference
-
-### Main export
-
-```typescript
-import { subagentLogging } from '@thatguyinabeanie/subagent-logging-plugin'
-```
 
 ### Core functions
 
