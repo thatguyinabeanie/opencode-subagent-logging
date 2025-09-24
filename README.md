@@ -33,7 +33,7 @@ Register the plugin in your OpenCode configuration:
 
 ```jsonc
 {
-  "plugins": ["github:@thatguyinabeanie/opencode-subagent-logging"],
+  "plugin": ["github@thatguyinabeanie/opencode-subagent-logging"]
 }
 ```
 
